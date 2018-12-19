@@ -15,10 +15,10 @@ $id = $_POST['id'];
 $post_data = [
             'type' => $type,
             'amount' => $_POST['amount'],
-            'notify_url' => 'https://b.xn--9kq677j3ki.app/pay/test.php',
-            'remark' => $id.'@lcy'
+            'notify_url' => $notify_url,
+            'remark' => $id.$remark
             ];
-$curl->post($post_data)->url('https://pay.lofter.cc/api.php');
+$curl->post($post_data)->url($apiurl);
 $content = $curl->data();
 $info = json_decode($content,true);
   $database->insert("paylogs", [

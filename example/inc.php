@@ -10,6 +10,10 @@ $config = [
         'password' => "123456", //数据库密码 
         'charset' => 'utf8'
      ];
+$notify_url = 'https://1.com/test.php';//回调地址
+$remark = 'lcy';//订单站点标注
+$apiurl = 'https://1.com/api.php';//前端api文件
+
 $database = new medoo($config);
 require './Curl.php';
 use Curl\Curl;
