@@ -1,5 +1,5 @@
 <?
-include 'src/Medoo.php';
+include './Medoo.php';
 use Medoo\Medoo;
 $config = [
         'database_type' => "mysql", //连接类型：mysql、mssql、sybase  
@@ -10,9 +10,8 @@ $config = [
         'password' => "123456", //数据库密码 
         'charset' => 'utf8'
      ];
-$api_url = 'https://pay.lofter.cc/api.php';
 $database = new medoo($config);
-require 'src/Curl.php';
+require './Curl.php';
 use Curl\Curl;
 $curl = new Curl;
 ?>

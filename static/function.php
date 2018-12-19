@@ -1,6 +1,6 @@
 <?php
 function get_m($text){
-  $regex = "/通过扫码向你付款(.*?)元/is";
+  $regex = "/成功收款(.*?)元/is";
   $regexx = "/微信支付收款(.*?)元/is";
   preg_match_all($regex,$text,$matches,PREG_PATTERN_ORDER);
   preg_match_all($regexx,$text,$matchesx,PREG_PATTERN_ORDER);

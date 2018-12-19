@@ -5,7 +5,7 @@ $amount = $_POST['amount'];
 if($order_no and $amount){
     $info = $database->get("paylogs", [ 
        "id",
-       "email",
+       "uid",
        "amount"
     ] ,[
       'i' => '0',
@@ -15,7 +15,7 @@ if($info['amount'] == $amount){
   $database->update("user", [
     'money[+]' => $amount
   ],[
-    "email" => $info['email']
+    "id" => $info['uid']
   ]);
   $database->update("paylogs", [
     'i' => 1

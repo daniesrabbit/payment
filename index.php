@@ -88,25 +88,11 @@ include("api.inc.php");
         <table class="table table-striped">
         
         
-          <thead><tr><th>Id</th><th>金额</th><th>订单号</th><th>类型</th><th>支付时间</th></tr></thead>
+          <thead><tr><th>Id</th><th>金额</th><th>订单号</th><th>类型</th><th>支付时间</th><th>备注</th></tr></thead>
           <tbody>
 <?php
 
-$numrows = $database->count("paylogs",[
-	"username" => $u,
-	"i" => 1
-]);
-$pagesize=30;
-$pages=intval($numrows/$pagesize);
-if ($numrows%$pagesize){
- $pages++;
- }
-if (isset($_GET['page'])){
-$page=intval($_GET['page']);
-}else{
-$page=1;
-}
-$offset=$pagesize*($page - 1);
+
 if(isset($_GET['text'])){
 $alim = $database->sum("paylogs",[
 	  "amount" 
@@ -128,12 +114,14 @@ $rs = $database->select("paylogs", [
 	"amount",
 	"order_no",
 	"type",
-	"time"
+	"time",
+    "remark"
 ], [
     "ORDER" => ["id"=>"DESC"],
     "order_no[~]" => $_GET['text'],
     "LIMIT" => [$offset, $pagesize]
 ]);
+    $numrows = $database->count("paylogs", [ "order_no[~]" => $_GET['text'] ]);
 }elseif(isset($_GET['time'])){
   $time = explode(" 至 ",$_GET['time']);
   $time[0] = $time[0].' 00:00:00';
@@ -160,13 +148,15 @@ $rs = $database->select("paylogs", [
 	"amount",
 	"order_no",
 	"type",
-	"time"
+	"time",
+    "remark"
 ], [
     "ORDER" => ["id"=>"DESC"],
       "time[>]" => $time[0],
       "time[<]" => $time[1],
     "LIMIT" => [$offset, $pagesize]
 ]);
+  $numrows = $database->count("paylogs", [ "time[>]" => $time[0],"time[<]" => $time[1] ]);
 }else{
   $alim = $database->sum("paylogs",[
 	  "amount" 
@@ -186,13 +176,26 @@ $rs = $database->select("paylogs", [
 	"amount",
 	"order_no",
 	"type",
-	"time"
+	"time",
+    "remark"
 ], [
     "ORDER" => ["id"=>"DESC"],
     "LIMIT" => [$offset, $pagesize]
 ]);
+  $numrows = $database->count("paylogs");
 }
-            $all = $wxm + $alim;
+$all = $wxm + $alim;
+$pagesize=30;
+$pages=intval($numrows/$pagesize);
+if ($numrows%$pagesize){
+ $pages++;
+ }
+if (isset($_GET['page'])){
+$page=intval($_GET['page']);
+}else{
+$page=1;
+}
+$offset=$pagesize*($page - 1);
             
 foreach($rs as $res){
 ?>
@@ -202,6 +205,7 @@ foreach($rs as $res){
 <td><?=$res['order_no']?></td>
 <td><?if($res['type'] == 'wxpay'){ echo '微信支付';}else{ echo '支付宝支付';}?></td>
 <td><?if($res['i'] == 1){ echo $res['time']; }elseif($res['i'] == 0){ echo '支付中'; }else{ echo '未支付'; }?></td>
+<td><?=$res['remark']?></td>
 </tr>
 <? } ?>
           </tbody>
